@@ -1,6 +1,13 @@
 package backup
 
-type Archiver intarface {
+import (
+	"archive/zip"
+	"io"
+	"os"
+	"path/filepath"
+)
+
+type Archiver interface {
 	DestFmt() func(int64) string
 	Archive(src, dest string) error
 }
@@ -22,7 +29,7 @@ func (z *zipper) Archive(src, dest string) error {
 	defer out.Close()
 	w := zip.NewWriter(out)
 	defer w.Close()
-	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error{
+	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil // スキップする
 		}
