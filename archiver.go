@@ -1,7 +1,7 @@
 package backup
 
 type Archiver intarface {
-	DestFmt() string
+	DestFmt() func(int64) string
 	Archive(src, dest string) error
 }
 
