@@ -30,6 +30,18 @@ $ go get github.com/matryer/filedb
 
 ## 実行
 
+backup
+- add: バックアップするフォルダを指定
+- list: 指定してるフォルダのリストを確認
+- remove: 指定しているフォルダの削除
+
+backupd
+```
+$ $home/go/src/backupd/cmds/backupd
+```
+下で同じフォルダ名のディレクトリを作成し, 実行することで自動backup  
+バックアップデータはarchive内にzip形式で保存される
+
 ```
 $ $home/go/src/backup/cmds/backup
 $ go build -o backup
