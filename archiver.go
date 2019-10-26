@@ -1,10 +1,15 @@
 package backup
 
 type Archiver intarface {
+	DestFmt() string
 	Archive(src, dest string) error
 }
 
 type zipper struct{}
+
+func (z *zipper) DestFmt() string {
+	return "%d.zip"
+}
 
 func (z *zipper) Archive(src, dest string) error {
 	if err := os.MkdirAll(filepath.Dir(dest), 0777); err != nil {
