@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"flag"
+	"fmt"
 	"log"
+	"strings"
 
 	"github.com/matryer/filedb"
 )
@@ -11,6 +14,10 @@ import (
 type path struct {
 	Path string
 	Hash string
+}
+
+func (p path) String() string {
+	return fmt.Sprintf("%s [%s]", p.Path, p.Hash)
 }
 
 func main() {
@@ -40,5 +47,47 @@ func main() {
 	if err != nil {
 		fatalErr = err
 		return
+	}
+	switch strings.ToLower(args[0]) {
+	case "list":
+		var path path
+		col.ForEach(func(i int, data []byte) bool {
+			err := json.Unmarshal(data, &path)
+			if err != nil {
+				fatalErr = err
+				return true
+			}
+			fmt.Printf("= %s\n", path)
+			return false
+		})
+	case "add":
+		if len(args[1:]) == 0 {
+			fatalErr = errors.New("追加するパスを指定してください")
+			return
+		}
+		for _, p := range args[1:] {
+			path := &path{Path: p, Hash: "まだアーカイブされていません"}
+			if err := col.InsertJSON(path); err != nil {
+				fatalErr = err
+				return
+			}
+			fmt.Printf("+ %s\n", path)
+		}
+	case "remove":
+		var path path
+		col.RemoveEach(func(i int, data []byte) (bool, bool) {
+			err := json.Unmarshal(data, &path)
+			if err != nil {
+				fatalErr = err
+				return false, true
+			}
+			for _, p := range args[1:] {
+				if path.Path == p {
+					fmt.Printf("- %s\n", path)
+					return true, false
+				}
+			}
+			return false, false
+		})
 	}
 }
