@@ -28,7 +28,7 @@ $ git clone github.com/fumihirokinoshita/backup
 $ go get github.com/matryer/filedb
 ```
 
-## 実行
+## 概要
 
 backup
 - add: バックアップするフォルダを指定
@@ -42,6 +42,7 @@ $ $home/go/src/backupd/cmds/backupd
 下で同じフォルダ名のディレクトリを作成し, 実行することで自動backup  
 バックアップデータはarchive内にzip形式で保存される
 
+### 実行の流れ
 ```
 $ $home/go/src/backup/cmds/backup
 $ go build -o backup
