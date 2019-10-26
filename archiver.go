@@ -8,9 +8,12 @@ import (
 )
 
 type Archiver interface {
-	DestFmt() func(int64) string
+	DestFmt() string
 	Archive(src, dest string) error
 }
+
+// ZIPはファイルの圧縮とその解除にZIP形式を利用するArchiver
+var ZIP Archiver = (*zipper)(nil)
 
 type zipper struct{}
 
